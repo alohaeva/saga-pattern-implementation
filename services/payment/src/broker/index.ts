@@ -1,44 +1,75 @@
-import amqp, { Connection } from 'amqplib';
+import { Connection } from 'amqplib';
 
-let brokerClient: Connection | null = null;
+import { generateUuid } from '../utils/generators/generateUuid';
 
-const queue = 'rpc_queue';
+import { getOrCreateBrokerConnection } from './connection';
+import { ConsumerHandler } from './types';
 
-function fibonacci(n: number): number {
-  if (n == 0 || n == 1) return n;
-  else return fibonacci(n - 1) + fibonacci(n - 2);
-}
+export class Broker {
+  static connection: Connection;
 
-export const connectToMQ = async () => {
-  if (!brokerClient) {
-    brokerClient = await amqp.connect('amqp://localhost:5672');
-
-    const channel = await brokerClient.createChannel();
-
-    await channel.assertQueue(queue, {
-      durable: false,
-    });
-
-    await channel.prefetch(1);
-
-    await channel.consume(queue, msg => {
-      if (!msg) {
-        return;
-      }
-
-      const n = parseInt(msg.content.toString());
-
-      console.log('[.] fib(%d)', n);
-
-      const r = fibonacci(n);
-
-      channel.sendToQueue(msg.properties.replyTo, Buffer.from(r.toString()), {
-        correlationId: msg.properties.correlationId,
-      });
-
-      channel.ack(msg);
-    });
+  static async init(url: string) {
+    Broker.connection = await getOrCreateBrokerConnection(url);
   }
 
-  return brokerClient;
-};
+  static setUpConsumer(queueName: string, handler: ConsumerHandler) {
+    return async () => {
+      const channel = await this.connection.createChannel();
+
+      await channel.prefetch(1);
+
+      await channel.assertQueue(queueName, {
+        durable: false,
+      });
+
+      await channel.consume(queueName, async msg => {
+        if (!msg) {
+          return;
+        }
+
+        const result = await handler(msg);
+
+        channel.sendToQueue(msg.properties.replyTo, Buffer.from(result.toString()), {
+          correlationId: msg.properties.correlationId,
+        });
+
+        channel.ack(msg);
+      });
+    };
+  }
+
+  static setUpPublisher(queueName: string) {
+    const correlationId = generateUuid();
+
+    return async (data: string | number | Record<string, unknown>) => {
+      const channel = await this.connection.createChannel();
+
+      const q = await channel.assertQueue(queueName, {
+        exclusive: true,
+      });
+
+      return new Promise(res => {
+        channel
+          .consume(
+            q.queue,
+            function (msg) {
+              if (!msg) return null;
+
+              if (msg.properties.correlationId == correlationId) {
+                res(msg);
+              }
+            },
+            {
+              noAck: true,
+            }
+          )
+          .then(() => {
+            channel.sendToQueue(queueName, Buffer.from(data.toString()), {
+              correlationId,
+              replyTo: q.queue,
+            });
+          });
+      });
+    };
+  }
+}
