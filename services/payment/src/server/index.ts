@@ -8,6 +8,7 @@ import bodyParser from 'body-parser';
 import { logger, loggerInstance } from '../logger';
 import { appConfig } from '../config/Config';
 import apiV1Router from '../api/v1';
+import { connectToMQ } from '../broker';
 
 const domainUrl = appConfig.get('common.domainUrl');
 const cookieSecret = appConfig.get('common.cookieSecret');
@@ -39,6 +40,7 @@ export class Server {
   }
 
   async start(port: number) {
+    await connectToMQ();
     this.server.listen(port);
   }
 
