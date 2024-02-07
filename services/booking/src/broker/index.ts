@@ -39,16 +39,16 @@ export class Broker {
   }
 
   static setUpPublisher(queueName: string) {
-    const correlationId = generateUuid();
-
     return async (data: string | number | Record<string, unknown>) => {
       const channel = await this.connection.createChannel();
 
-      const q = await channel.assertQueue(queueName, {
+      const q = await channel.assertQueue(`${queueName}-reply`, {
         exclusive: true,
       });
 
       return new Promise(res => {
+        const correlationId = generateUuid();
+
         channel
           .consume(
             q.queue,
