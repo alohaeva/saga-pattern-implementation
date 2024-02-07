@@ -1,9 +1,26 @@
 version: "3.8"
 
 services:
+  mongodb:
+    image: mongo:7.0.5
+    container_name: 'mongodb'
+    volumes:
+      - /data/saga-pattern:/data/db
+    networks:
+      - app-network
+    environment:
+      - MONGODB_INITDB_ROOT_USERNAME=saga-pattern-db-user
+      - MONGODB_INITDB_ROOT_PASSWORD=saga-pattern-password
+    ports:
+      - "27017:27017"
+    restart: always
+
   borker:
     image: rabbitmq:3.13-rc-management-alpine
     container_name: 'rabbitmq'
+    environment:
+      - RABBITMQ_USER=saga-pattern-user
+      - RABBITMQ_PASSWORD=saga-pattern-password
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -11,8 +28,8 @@ services:
       - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
       - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
     networks:
-      - rabbitmq
+      - app-network
 
 networks:
-  rabbitmq:
+  app-network:
     driver: bridge
