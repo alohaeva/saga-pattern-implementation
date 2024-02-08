@@ -2,15 +2,12 @@ version: "3.8"
 
 services:
   mongodb:
-    image: mongo:7.0.5
+    image: mongo:7.0
     container_name: 'mongodb'
     volumes:
-      - /data/saga-pattern:/data/db
+      - /tmp/saga:/data/db
     networks:
       - app-network
-    environment:
-      - MONGODB_INITDB_ROOT_USERNAME=saga-pattern-db-user
-      - MONGODB_INITDB_ROOT_PASSWORD=saga-pattern-password
     ports:
       - "27017:27017"
     restart: always
