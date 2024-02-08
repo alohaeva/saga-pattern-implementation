@@ -9,7 +9,7 @@ const apiV1Router = Router();
 
 const startTime = new Date();
 
-apiV1Router.get('/hello', (req, res) => {
+apiV1Router.get('/health', (req, res) => {
   return sendResponse(res, {
     result: {
       startTime: startTime.toISOString(),
@@ -19,6 +19,6 @@ apiV1Router.get('/hello', (req, res) => {
   });
 });
 
-apiV1Router.use('/v1/goods', goodsRouter);
+apiV1Router.use('/v1', goodsRouter);
 
 export default apiV1Router;

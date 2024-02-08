@@ -2,8 +2,8 @@
   "openapi": "3.0.0",
   "info": {
     "version": "v1.0.0",
-    "title": "Swagger Demo Project",
-    "description": "Implementation of Swagger with TypeScript"
+    "title": "Saga pattern implementation",
+    "description": "REST API for saga pattern implementation"
   },
   "servers": [
     {
@@ -12,7 +12,7 @@
     }
   ],
   "paths": {
-    "/hello": {
+    "/health": {
       "get": {
         "description": "",
         "responses": {
@@ -22,7 +22,7 @@
         }
       }
     },
-    "/v1/goods/": {
+    "/v1/goods": {
       "get": {
         "description": "",
         "responses": {

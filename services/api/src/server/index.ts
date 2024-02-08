@@ -12,7 +12,6 @@ import apiV1Router from '../api/v1';
 import { testEventConsumer } from '../broker/consumers';
 import { Broker } from '../broker';
 import { publishTestEvent } from '../broker/publishers';
-
 import swaggerOutput from '../swagger_output.json';
 
 const domainUrl = appConfig.get('common.domainUrl');

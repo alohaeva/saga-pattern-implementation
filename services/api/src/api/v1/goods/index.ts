@@ -5,7 +5,7 @@ import { sendResponse } from '../../../utils/http';
 
 const goodsRouter = Router();
 
-goodsRouter.get('/', (req, res) => {
+goodsRouter.get('/items', (req, res) => {
   return sendResponse(res, {
     result: {
       goods: [
@@ -19,7 +19,7 @@ goodsRouter.get('/', (req, res) => {
   });
 });
 
-goodsRouter.get('/:itemId', (req, res) => {
+goodsRouter.get('/items/:itemId', (req, res) => {
   return sendResponse(res, {
     result: {
       goods: {
