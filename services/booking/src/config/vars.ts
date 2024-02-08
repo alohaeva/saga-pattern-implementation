@@ -11,7 +11,7 @@ export default {
     cookieSecret: COOKIE_SECRET,
   },
   server: {
-    port: PORT || 9000,
+    port: PORT,
   },
   connections: {},
 };

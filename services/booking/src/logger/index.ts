@@ -10,7 +10,7 @@ export const loggerInstance = pinoHttp({
         colorize: true,
       },
     },
-    msgPrefix: '[NodeJS - Express - Boilerplate] ',
+    msgPrefix: '[Booking Service] ',
   }),
   quietReqLogger: true,
   customReceivedMessage(req) {
