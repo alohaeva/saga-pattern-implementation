@@ -26,14 +26,19 @@ export class Broker {
         if (!msg) {
           return;
         }
+        try {
+          const content = msg.content.toString();
 
-        const result = await handler(msg);
+          const result = await handler(JSON.parse(content));
 
-        channel.sendToQueue(msg.properties.replyTo, Buffer.from(result.toString()), {
-          correlationId: msg.properties.correlationId,
-        });
+          channel.sendToQueue(msg.properties.replyTo, Buffer.from(JSON.stringify(result), 'utf8'), {
+            correlationId: msg.properties.correlationId,
+          });
 
-        channel.ack(msg);
+          channel.ack(msg);
+        } catch (e) {
+          console.log(e);
+        }
       });
     };
   }
@@ -56,7 +61,13 @@ export class Broker {
               if (!msg) return null;
 
               if (msg.properties.correlationId == correlationId) {
-                res(msg);
+                try {
+                  const content = msg.content.toString();
+
+                  res(JSON.parse(content));
+                } catch (e) {
+                  console.log(e);
+                }
               }
             },
             {
@@ -64,7 +75,7 @@ export class Broker {
             }
           )
           .then(() => {
-            channel.sendToQueue(queueName, Buffer.from(data.toString()), {
+            channel.sendToQueue(queueName, Buffer.from(JSON.stringify(data.toString), 'utf8'), {
               correlationId,
               replyTo: q.queue,
             });

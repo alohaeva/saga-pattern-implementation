@@ -2,6 +2,8 @@
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules", "test"],
   "compilerOptions": {
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false,
     /* Visit https://aka.ms/tsconfig to read more about this file */
     "target": "ESNext", /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
     "module": "commonjs", /* Specify what module code is generated. */
@@ -15,6 +17,6 @@
     "removeComments": true, /* Disable emitting comments. */
     "inlineSourceMap": true, /* Include sourcemap files inside the emitted JavaScript. */
     "useUnknownInCatchVariables": true, /* Default catch clause variables as 'unknown' instead of 'any'. */
-    "sourceMap": true, /* Create source map files for emitted JavaScript files. */
+    "sourceMap": true /* Create source map files for emitted JavaScript files. */
   }
 }

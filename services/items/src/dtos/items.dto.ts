@@ -1,22 +1,16 @@
 import { Expose, Transform } from 'class-transformer';
 
-export class ChatStateDTO {
+export class ItemsDto {
   @Expose()
   @Transform(params => params.obj?._id.toString())
   id: string;
 
   @Expose()
-  userId: string;
+  title: string;
 
   @Expose()
-  state: string;
+  description: boolean;
 
   @Expose()
-  targetWord: string;
-
-  @Expose()
-  incorrectTry: number;
-
-  @Expose()
-  isEnToGeo: boolean;
+  price: number;
 }
