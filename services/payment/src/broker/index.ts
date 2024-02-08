@@ -29,7 +29,7 @@ export class Broker {
 
         const result = await handler(msg);
 
-        channel.sendToQueue(msg.properties.replyTo, Buffer.from(result.toString()), {
+        channel.sendToQueue(msg.properties.replyTo, Buffer.from(JSON.stringify(result), 'utf8'), {
           correlationId: msg.properties.correlationId,
         });
 
@@ -64,7 +64,7 @@ export class Broker {
             }
           )
           .then(() => {
-            channel.sendToQueue(queueName, Buffer.from(data.toString()), {
+            channel.sendToQueue(queueName, Buffer.from(JSON.stringify(data.toString), 'utf8'), {
               correlationId,
               replyTo: q.queue,
             });
