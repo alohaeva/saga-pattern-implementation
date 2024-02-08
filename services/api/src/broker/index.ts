@@ -29,7 +29,7 @@ export class Broker {
 
         const result = await handler(msg);
 
-        channel.sendToQueue(msg.properties.replyTo, Buffer.from(result.toString()), {
+        channel.sendToQueue(msg.properties.replyTo, Buffer.from(JSON.stringify(result), 'utf8'), {
           correlationId: msg.properties.correlationId,
         });
 
@@ -38,7 +38,7 @@ export class Broker {
     };
   }
 
-  static setUpPublisher(queueName: string) {
+  static setUpPublisher<T extends Record<string, unknown>>(queueName: string) {
     return async (data: string | number | Record<string, unknown>) => {
       const channel = await this.connection.createChannel();
 
@@ -46,7 +46,7 @@ export class Broker {
         exclusive: true,
       });
 
-      return new Promise(res => {
+      return new Promise<T>(res => {
         const correlationId = generateUuid();
 
         channel
@@ -56,7 +56,13 @@ export class Broker {
               if (!msg) return null;
 
               if (msg.properties.correlationId == correlationId) {
-                res(msg);
+                try {
+                  const content = msg.content.toString();
+
+                  res(JSON.parse(content));
+                } catch (e) {
+                  console.log(e);
+                }
               }
             },
             {
@@ -64,7 +70,9 @@ export class Broker {
             }
           )
           .then(() => {
-            channel.sendToQueue(queueName, Buffer.from(data.toString()), {
+            const payload = JSON.stringify(data);
+
+            channel.sendToQueue(queueName, Buffer.from(payload, 'utf8'), {
               correlationId,
               replyTo: q.queue,
             });

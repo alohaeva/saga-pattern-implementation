@@ -9,9 +9,7 @@ import swaggerUi from 'swagger-ui-express';
 import { logger, loggerInstance } from '../logger';
 import { appConfig } from '../config/Config';
 import apiV1Router from '../api/v1';
-import { testEventConsumer } from '../broker/consumers';
 import { Broker } from '../broker';
-import { publishTestEvent } from '../broker/publishers';
 import swaggerOutput from '../swagger_output.json';
 
 const domainUrl = appConfig.get('common.domainUrl');
@@ -47,6 +45,10 @@ export class Server {
   }
 
   async start(port: number) {
+    if (brokerConnection) {
+      await Broker.init(`${brokerConnection.protocol}://${brokerConnection.host}:${brokerConnection.port}`);
+    }
+
     this.server.listen(port);
   }
 

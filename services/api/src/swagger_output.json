@@ -22,8 +22,16 @@
         }
       }
     },
-    "/v1/goods": {
+    "/v1/items": {
       "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "post": {
         "description": "",
         "responses": {
           "default": {
@@ -32,7 +40,7 @@
         }
       }
     },
-    "/v1/goods/{itemId}": {
+    "/v1/items/{itemId}": {
       "get": {
         "description": "",
         "parameters": [
