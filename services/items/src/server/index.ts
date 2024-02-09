@@ -9,7 +9,7 @@ import { Broker } from '../broker';
 import MongoDBConnection from '../mongo';
 import { diContainer } from '../containers';
 import { MONGODB_CONNECTION } from '../const/services';
-import { createItemConsumer } from '../broker/consumers';
+import { createItemConsumer, getAllConsumer, getByIdConsumer } from '../broker/consumers';
 
 const brokerConnection = appConfig.get('connections.broker');
 const mongoUri = appConfig.get('connections.mongo.uri');
@@ -43,6 +43,8 @@ export class Server {
       await Broker.init(`${brokerConnection.protocol}://${brokerConnection.host}:${brokerConnection.port}`);
 
       await createItemConsumer();
+      await getAllConsumer();
+      await getByIdConsumer();
     }
 
     this.server.listen(port);

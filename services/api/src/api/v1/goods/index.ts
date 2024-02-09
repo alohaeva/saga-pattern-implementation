@@ -2,31 +2,29 @@ import { Router } from 'express';
 import httpStatusCodes from 'status-code-enum';
 
 import { sendResponse } from '../../../utils/http';
-import { createItemPublisher } from '../../../broker/publishers';
+import { createItemPublisher, getAllItemsPublisher, getItemByIdPublisher } from '../../../broker/publishers';
 
 const goodsRouter = Router();
 
-goodsRouter.get('/items', (req, res) => {
+goodsRouter.get('/items', async (req, res) => {
+  const items = await getAllItemsPublisher();
+
   return sendResponse(res, {
     result: {
-      goods: [
-        {
-          id: 'id-1',
-        },
-      ],
+      items,
     },
     status: httpStatusCodes.SuccessOK,
     success: true,
   });
 });
 
-goodsRouter.get('/items/:itemId', (req, res) => {
+goodsRouter.get('/items/:itemId', async (req, res) => {
+  const item = await getItemByIdPublisher({
+    id: req.params.itemId,
+  });
+
   return sendResponse(res, {
-    result: {
-      goods: {
-        id: `id-${req.params.itemId}`,
-      },
-    },
+    result: item,
     status: httpStatusCodes.SuccessOK,
     success: true,
   });
@@ -38,8 +36,6 @@ goodsRouter.post('/items', async (req, res) => {
     description: 'New item Description',
     price: 1000,
   });
-
-  console.log(item);
 
   return sendResponse(res, {
     result: {

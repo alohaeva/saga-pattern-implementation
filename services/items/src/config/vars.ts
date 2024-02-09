@@ -26,7 +26,7 @@ export default {
       protocol: BROKER_PROTOCOL,
     },
     mongo: {
-      uri: `mongodb://myUserAdmin:abc123@${MONGO_DB_HOST}:${MONGO_DB_PORT}/${MONGO_DB_TABLE_NAME}?authSource=admin`,
+      uri: `mongodb://${MONGO_DB_HOST}:${MONGO_DB_PORT}/${MONGO_DB_TABLE_NAME}?authSource=admin&replicaSet=rs0&directConnection=true`,
     },
   },
 };

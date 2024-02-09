@@ -39,10 +39,10 @@ export class Broker {
   }
 
   static setUpPublisher<T extends Record<string, unknown>>(queueName: string) {
-    return async (data: string | number | Record<string, unknown>) => {
+    return async (data?: string | number | Record<string, unknown>) => {
       const channel = await this.connection.createChannel();
 
-      const q = await channel.assertQueue(`${queueName}-reply`, {
+      const q = await channel.assertQueue('', {
         exclusive: true,
       });
 
@@ -70,7 +70,7 @@ export class Broker {
             }
           )
           .then(() => {
-            const payload = JSON.stringify(data);
+            const payload = JSON.stringify(data ?? {});
 
             channel.sendToQueue(queueName, Buffer.from(payload, 'utf8'), {
               correlationId,
