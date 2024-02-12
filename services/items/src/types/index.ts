@@ -29,3 +29,10 @@ export type PathValue<T, P extends Path<T>> = P extends `${infer Key}.${infer Re
   : P extends keyof T
     ? T[P]
     : never;
+
+/**
+ * Exclude null and undefined from T
+ */
+export type Nullable<T> = {
+  [Prop in keyof T]: T[Prop] | null;
+};

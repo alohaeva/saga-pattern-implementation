@@ -1,26 +1,13 @@
-import { plainToInstance } from 'class-transformer';
-import { ClientSession } from 'mongoose';
-
-import MongoDBConnection from '../mongo';
-import { ItemsDto } from '../dtos/items.dto';
 import { ItemSchemaType } from '../schemas/Item.schema';
-import { withTransaction } from '../mongo/withTransaction';
-
-const createItem = withTransaction(async (data: ItemSchemaType, session: ClientSession) => {
-  const itemsModel = MongoDBConnection.getModel('Item');
-
-  const [newItem] = await itemsModel.create([data], {
-    session: session,
-  });
-
-  return plainToInstance(ItemsDto, newItem.toObject(), {
-    excludeExtraneousValues: true,
-  });
-});
+import { diContainer } from '../containers';
+import { ITEMS_REPOSITORY } from '../const/services';
+import { ItemRepository } from '../repositories/item.repository';
 
 export const handleCreateItem = async (data: ItemSchemaType) => {
   try {
-    const newItem = createItem(data);
+    const itemRepository = diContainer.get<ItemRepository>(ITEMS_REPOSITORY);
+
+    const newItem = await itemRepository.create(data);
 
     return {
       success: true,
@@ -36,21 +23,13 @@ export const handleCreateItem = async (data: ItemSchemaType) => {
 
 export const handleGetAll = async () => {
   try {
-    const itemsModel = MongoDBConnection.getModel('Item');
+    const itemRepository = diContainer.get<ItemRepository>(ITEMS_REPOSITORY);
 
-    const items = await itemsModel.find({});
-
-    const parsedItem = plainToInstance(
-      ItemsDto,
-      items.map(item => item.toObject()),
-      {
-        excludeExtraneousValues: true,
-      }
-    );
+    const items = await itemRepository.find({});
 
     return {
       success: true,
-      result: parsedItem,
+      result: items,
     };
   } catch (e) {
     return {
@@ -64,9 +43,9 @@ export const handleGetAll = async () => {
 
 export const handleGetById = async (data: { id: string }) => {
   try {
-    const itemsModel = MongoDBConnection.getModel('Item');
+    const itemRepository = diContainer.get<ItemRepository>(ITEMS_REPOSITORY);
 
-    const item = await itemsModel.findById(data.id);
+    const item = await itemRepository.findById(data.id);
 
     if (!item) {
       return {
@@ -75,13 +54,9 @@ export const handleGetById = async (data: { id: string }) => {
       };
     }
 
-    const parsedItem = plainToInstance(ItemsDto, item.toObject(), {
-      excludeExtraneousValues: true,
-    });
-
     return {
       success: true,
-      result: parsedItem,
+      result: item,
     };
   } catch (e) {
     return {

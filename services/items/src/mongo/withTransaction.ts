@@ -3,7 +3,7 @@ import { ClientSession } from 'mongoose';
 
 import MongoDBConnection from './index';
 
-export const withTransaction = (fn: (data: any, session: ClientSession) => unknown) => async (data: any) => {
+export const withTransaction = async <T>(fn: (session: ClientSession) => Promise<T>) => {
   const transactionOptions: TransactionOptions = {
     readConcern: {
       level: 'snapshot',
@@ -22,7 +22,7 @@ export const withTransaction = (fn: (data: any, session: ClientSession) => unkno
     try {
       session.startTransaction(transactionOptions);
 
-      const result = await fn(data, session);
+      const result = await fn(session);
 
       await session.commitTransaction();
 

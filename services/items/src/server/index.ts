@@ -8,8 +8,9 @@ import { appConfig } from '../config/Config';
 import { Broker } from '../broker';
 import MongoDBConnection from '../mongo';
 import { diContainer } from '../containers';
-import { MONGODB_CONNECTION } from '../const/services';
+import { ITEMS_REPOSITORY, MONGODB_CONNECTION } from '../const/services';
 import { createItemConsumer, getAllConsumer, getByIdConsumer } from '../broker/consumers';
+import { ItemRepository } from '../repositories/item.repository';
 
 const brokerConnection = appConfig.get('connections.broker');
 const mongoUri = appConfig.get('connections.mongo.uri');
@@ -36,7 +37,10 @@ export class Server {
         schemasPath: path.join(__dirname, '../schemas'),
       });
 
+      const itemsRepository = new ItemRepository();
+
       diContainer.register(MONGODB_CONNECTION, mongoInstance);
+      diContainer.register(ITEMS_REPOSITORY, itemsRepository);
     }
 
     if (brokerConnection) {
