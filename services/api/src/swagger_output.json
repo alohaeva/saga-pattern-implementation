@@ -37,6 +37,26 @@
           "default": {
             "description": ""
           }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "example": "any"
+                  },
+                  "description": {
+                    "example": "any"
+                  },
+                  "price": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -60,6 +80,44 @@
         }
       },
       "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/items/book/{itemId}": {
+      "post": {
         "description": "",
         "parameters": [
           {
