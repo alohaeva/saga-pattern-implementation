@@ -8,7 +8,7 @@ export const BROKER_PORT = parseNumber(process.env.BROKER_PORT, 5672);
 export const BROKER_HOST = parseString(process.env.BROKER_HOST, 'localhost');
 export const BROKER_PROTOCOL = parseString(process.env.BROKER_PROTOCOL, 'amqp');
 export const MONGO_DB_HOST = parseString(process.env.MONGO_DB_HOST, '127.0.0.1');
-export const MONGO_DB_PORT = parseString(process.env.MONGO_DB_PORT, '27017');
+export const MONGO_DB_PORT = parseNumber(process.env.MONGO_DB_PORT, 27017);
 export const MONGO_DB_TABLE_NAME = parseString(process.env.MONGO_DB_TABLE_NAME, 'items');
 
 export default {
@@ -26,7 +26,7 @@ export default {
       protocol: BROKER_PROTOCOL,
     },
     mongo: {
-      uri: `mongodb://${MONGO_DB_HOST}:${MONGO_DB_PORT}/${MONGO_DB_TABLE_NAME}?authSource=admin&replicaSet=rs0&directConnection=true`,
+      uri: `mongodb://${MONGO_DB_HOST}:${MONGO_DB_PORT}/${MONGO_DB_TABLE_NAME}?replicaSet=rs0&directConnection=true`,
     },
   },
 };

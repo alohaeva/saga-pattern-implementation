@@ -1,13 +1,26 @@
 import { Router } from 'express';
 import httpStatusCodes from 'status-code-enum';
+import { instanceToPlain, plainToInstance } from 'class-transformer';
+import { randNumber, randProductName, randProductDescription } from '@ngneat/falso';
 
 import { sendResponse } from '../../../utils/http';
-import { createItemPublisher, getAllItemsPublisher, getItemByIdPublisher } from '../../../broker/publishers';
+import {
+  createItemPublisher,
+  deleteItemPublisher,
+  getAllItemsPublisher,
+  getItemByIdPublisher,
+  updateItemPublisher,
+} from '../../../broker/publishers';
+import { QueryDto } from '../../../dto/query.dto';
 
-const goodsRouter = Router();
+const itemsRouter = Router();
 
-goodsRouter.get('/items', async (req, res) => {
-  const items = await getAllItemsPublisher();
+itemsRouter.get('/items', async (req, res) => {
+  const queryDto = plainToInstance(QueryDto, req.query, {
+    excludeExtraneousValues: true,
+  });
+
+  const items = await getAllItemsPublisher(instanceToPlain(queryDto));
 
   return sendResponse(res, {
     result: {
@@ -18,7 +31,7 @@ goodsRouter.get('/items', async (req, res) => {
   });
 });
 
-goodsRouter.get('/items/:itemId', async (req, res) => {
+itemsRouter.get('/items/:itemId', async (req, res) => {
   const item = await getItemByIdPublisher({
     id: req.params.itemId,
   });
@@ -30,11 +43,14 @@ goodsRouter.get('/items/:itemId', async (req, res) => {
   });
 });
 
-goodsRouter.post('/items', async (req, res) => {
+itemsRouter.post('/items', async (req, res) => {
   const item = await createItemPublisher({
-    title: 'New Item',
-    description: 'New item Description',
-    price: 1000,
+    title: randProductName(),
+    description: randProductDescription(),
+    price: randNumber({
+      min: 10,
+      max: 1000,
+    }),
   });
 
   return sendResponse(res, {
@@ -46,4 +62,29 @@ goodsRouter.post('/items', async (req, res) => {
   });
 });
 
-export default goodsRouter;
+itemsRouter.delete('/items/:itemId', async (req, res) => {
+  await deleteItemPublisher({
+    id: req.params.itemId,
+  });
+
+  return sendResponse(res, {
+    result: {},
+    status: httpStatusCodes.SuccessOK,
+    success: true,
+  });
+});
+
+itemsRouter.put('/items/:itemId', async (req, res) => {
+  const item = await updateItemPublisher({
+    id: req.params.itemId,
+    data: req.body,
+  });
+
+  return sendResponse(res, {
+    result: item,
+    status: httpStatusCodes.SuccessOK,
+    success: true,
+  });
+});
+
+export default itemsRouter;

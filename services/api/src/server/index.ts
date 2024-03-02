@@ -5,6 +5,7 @@ import express, { Express } from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import swaggerUi from 'swagger-ui-express';
+import helmet from 'helmet';
 
 import { logger, loggerInstance } from '../logger';
 import { appConfig } from '../config/Config';
@@ -38,6 +39,7 @@ export class Server {
     );
     app.use(bodyParser.json());
     app.use(cookieParser(cookieSecret));
+    app.use(helmet());
 
     app.use(apiV1Router);
 
@@ -46,7 +48,7 @@ export class Server {
 
   async start(port: number) {
     if (brokerConnection) {
-      await Broker.init(`${brokerConnection.protocol}://${brokerConnection.host}:${brokerConnection.port}`);
+      await Broker.init(brokerConnection);
     }
 
     this.server.listen(port);

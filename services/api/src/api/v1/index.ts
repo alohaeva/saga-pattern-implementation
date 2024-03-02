@@ -3,7 +3,7 @@ import httpStatusCodes from 'status-code-enum';
 
 import { sendResponse } from '../../utils/http';
 
-import goodsRouter from './goods';
+import itemsRouter from './goods';
 
 const apiV1Router = Router();
 
@@ -19,6 +19,6 @@ apiV1Router.get('/health', (req, res) => {
   });
 });
 
-apiV1Router.use('/v1', goodsRouter);
+apiV1Router.use('/v1', itemsRouter);
 
 export default apiV1Router;

@@ -8,7 +8,9 @@ import { ConsumerHandler } from './types';
 export class Broker {
   static connection: Connection;
 
-  static async init(url: string) {
+  static async init(connection: { protocol: string; host: string; port: number }) {
+    const url = `${connection.protocol}://${connection.host}:${connection.port}`;
+
     Broker.connection = await getOrCreateBrokerConnection(url);
   }
 
@@ -27,7 +29,9 @@ export class Broker {
           return;
         }
 
-        const result = await handler(msg);
+        const content = msg.content.toString();
+
+        const result = await handler(JSON.parse(content));
 
         channel.sendToQueue(msg.properties.replyTo, Buffer.from(JSON.stringify(result), 'utf8'), {
           correlationId: msg.properties.correlationId,

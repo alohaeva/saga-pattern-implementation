@@ -13,6 +13,8 @@
   ],
   "compilerOptions": {
     "resolveJsonModule": true,
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false,
     /* Visit https://aka.ms/tsconfig to read more about this file */
     "target": "ESNext", /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
     "module": "commonjs", /* Specify what module code is generated. */

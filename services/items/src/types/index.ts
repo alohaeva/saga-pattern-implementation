@@ -36,3 +36,21 @@ export type PathValue<T, P extends Path<T>> = P extends `${infer Key}.${infer Re
 export type Nullable<T> = {
   [Prop in keyof T]: T[Prop] | null;
 };
+
+export type SuccessResult = {
+  success: true;
+  result: unknown;
+};
+
+export type ErrorResult = {
+  success: false;
+  error: {
+    message: string;
+  };
+};
+
+export type QueryParams = {
+  sort: 'ASC' | 'DESC';
+  limit: number;
+  page: number;
+};

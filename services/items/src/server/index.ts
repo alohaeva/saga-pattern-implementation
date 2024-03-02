@@ -3,13 +3,19 @@ import path from 'path';
 
 import express, { Express } from 'express';
 
-import { logger, loggerInstance } from '../logger';
+import { loggerInstance } from '../logger';
 import { appConfig } from '../config/Config';
 import { Broker } from '../broker';
 import MongoDBConnection from '../mongo';
 import { diContainer } from '../containers';
 import { ITEMS_REPOSITORY, MONGODB_CONNECTION } from '../const/services';
-import { createItemConsumer, getAllConsumer, getByIdConsumer } from '../broker/consumers';
+import {
+  createItemConsumer,
+  deleteByIdConsumer,
+  getAllConsumer,
+  getByIdConsumer,
+  updateByIdConsumer,
+} from '../broker/consumers';
 import { ItemRepository } from '../repositories/item.repository';
 
 const brokerConnection = appConfig.get('connections.broker');
@@ -21,8 +27,6 @@ export class Server {
 
   constructor() {
     const app = express();
-
-    app.use(loggerInstance);
 
     this.catchUncaughtException();
 
@@ -44,11 +48,13 @@ export class Server {
     }
 
     if (brokerConnection) {
-      await Broker.init(`${brokerConnection.protocol}://${brokerConnection.host}:${brokerConnection.port}`);
+      await Broker.init(brokerConnection);
 
       await createItemConsumer();
       await getAllConsumer();
       await getByIdConsumer();
+      await deleteByIdConsumer();
+      await updateByIdConsumer();
     }
 
     this.server.listen(port);
@@ -57,7 +63,7 @@ export class Server {
   catchUncaughtException() {
     process.on('uncaughtException', err => {
       // log the exception
-      logger.fatal(err, 'uncaught exception detected');
+      loggerInstance.fatal(err, 'uncaught exception detected');
 
       this.server.close();
       // shutdown the server gracefully

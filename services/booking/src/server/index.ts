@@ -5,6 +5,9 @@ import express, { Express } from 'express';
 import { logger, loggerInstance } from '../logger';
 import { Broker } from '../broker';
 import { publishTestEvent } from '../broker/publishers';
+import { appConfig } from '../config/Config';
+
+const brokerConnection = appConfig.get('connections.broker');
 
 export class Server {
   app: Express;
@@ -22,7 +25,9 @@ export class Server {
   }
 
   async start(port: number) {
-    await Broker.init('amqp://localhost:5672');
+    if (brokerConnection) {
+      await Broker.init(brokerConnection);
+    }
 
     const data = await publishTestEvent({
       hello: 'hello',
