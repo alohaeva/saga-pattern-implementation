@@ -1,4 +1,4 @@
-import { ItemSchemaType } from '../../schemas/Item.schema';
+import { ItemSchemaType } from '../../entities/item';
 import { diContainer } from '../../containers';
 import { ItemRepository } from '../../repositories/item.repository';
 import { ITEMS_REPOSITORY } from '../../const/services';

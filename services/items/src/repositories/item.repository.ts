@@ -2,8 +2,7 @@ import { plainToInstance } from 'class-transformer';
 import { FilterQuery } from 'mongoose';
 
 import MongoDBConnection from '../mongo';
-import { ItemSchemaType } from '../schemas/Item.schema';
-import { ItemsDto } from '../dtos/items.dto';
+import { ItemsDto, ItemSchemaType } from '../entities/item';
 import { Nullable, QueryParams } from '../types';
 
 import { BaseRepository } from './base.repository';

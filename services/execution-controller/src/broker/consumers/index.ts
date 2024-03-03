@@ -1,11 +1,4 @@
 import { Broker } from '../index';
+import { handleBookItem } from '../../controllers';
 
-export const startBookingItemConsumer = Broker.setUpConsumer('executionController:bookItem', async message => {
-  console.log(message);
-  return {
-    success: true,
-    result: {
-      world: 'world',
-    },
-  };
-});
+export const startBookingItemConsumer = Broker.setUpConsumer('executionController:bookItem', handleBookItem);

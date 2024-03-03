@@ -22,4 +22,4 @@ export const handleDeleteItemById = async (data: { id: string }) => {
     success: true,
     result: {},
   };
-}
+};

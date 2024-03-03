@@ -3,6 +3,8 @@ import path from 'path';
 
 import mongoose, { Mongoose } from 'mongoose';
 
+import { firstLetterToUpperCase } from '../utils/transformers/firstLetterToUpperCase';
+
 type MongoDbConnectionOptions = {
   uri: string;
   schemasPath: string;
@@ -31,16 +33,19 @@ class MongoDBConnection {
 
   static async loadSchemas(schemasPath: MongoDbConnectionOptions['schemasPath']) {
     try {
-      const schemas = await readdir(schemasPath);
-
-      schemas.forEach(file => {
-        const modelName = file.split('.')[0];
-
-        // eslint-disable-next-line
-        const data = require(`${path.join(schemasPath, file)}`).default;
-
-        mongoose.model(modelName, data);
+      const schemas = await readdir(schemasPath, {
+        recursive: true,
       });
+
+      schemas
+        .filter(file => file.includes('.schema.'))
+        .forEach(file => {
+          const modelName = file.replace(/(.*\/)/, '').split('.')[0];
+
+          // eslint-disable-next-line
+          const data = require(`${path.join(schemasPath, file)}`).default;
+          mongoose.model(firstLetterToUpperCase(modelName), data);
+        });
     } catch (e) {
       console.log(e);
     }

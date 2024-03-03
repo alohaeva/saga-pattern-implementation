@@ -29,3 +29,24 @@ export type PathValue<T, P extends Path<T>> = P extends `${infer Key}.${infer Re
   : P extends keyof T
     ? T[P]
     : never;
+
+export type FailedBrokerResponse = {
+  success: false;
+  error: {
+    message: string;
+  };
+};
+
+export type SucceededBrokerResponse<T> = {
+  success: true;
+  result: T;
+};
+
+export type BrokerResponse<T> = FailedBrokerResponse | SucceededBrokerResponse<T>;
+
+export type Item = {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+};

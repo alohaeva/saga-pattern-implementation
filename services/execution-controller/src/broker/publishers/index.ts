@@ -1,3 +1,4 @@
 import { Broker } from '../index';
+import { BrokerResponse, Item } from '../../types';
 
-export const publishTestEvent = Broker.setUpPublisher('test-event');
+export const updateItemPublisher = Broker.setUpPublisher<BrokerResponse<Item>>('item:updateById');

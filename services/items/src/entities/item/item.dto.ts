@@ -13,4 +13,7 @@ export class ItemsDto {
 
   @Expose()
   price: number;
+
+  @Expose()
+  status: string;
 }

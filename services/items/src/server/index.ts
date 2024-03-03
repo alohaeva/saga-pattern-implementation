@@ -38,7 +38,7 @@ export class Server {
     if (mongoUri) {
       const mongoInstance = await MongoDBConnection.connect({
         uri: mongoUri,
-        schemasPath: path.join(__dirname, '../schemas'),
+        schemasPath: path.join(__dirname, '../entities'),
       });
 
       const itemsRepository = new ItemRepository();
