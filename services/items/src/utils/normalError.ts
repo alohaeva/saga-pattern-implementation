@@ -66,7 +66,9 @@ export const toNormalizedError = <E>(value: E extends NormalizedError ? never : 
   } else {
     try {
       return new NormalizedError(
-        new Error(`Unexpected value thrown: ${typeof value === 'object' ? JSON.stringify(value) : String(value)}`),
+        new Error(`Unexpected value thrown: ${typeof value === 'object'
+          ? JSON.stringify(value)
+          : String(value)}`),
         value
       );
     } catch {

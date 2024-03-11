@@ -26,4 +26,4 @@ export const handleDeleteItemById = async (req: Request, res: Response) => {
     status: httpStatusCodes.SuccessOK,
     success: true,
   });
-}
+};

@@ -10,15 +10,9 @@ export const loggerInstance = pinoHttp({
         colorize: true,
       },
     },
-    msgPrefix: '[NodeJS - Express - Boilerplate] ',
+    msgPrefix: '[Payments Service] ',
   }),
   quietReqLogger: true,
-  customReceivedMessage(req) {
-    return `${req.method} ${req.url} incoming message`;
-  },
-  customSuccessMessage(req, res, responseTime) {
-    return `${req.method} ${req.url} completed with ${res.statusCode} status after ${responseTime}ms`;
-  },
 });
 
 export const { logger } = loggerInstance;

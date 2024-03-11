@@ -1,11 +1,5 @@
 import { Broker } from '../index';
+import { handleGetPaymentData, handleCreateItemProduct } from '../../controllers';
 
-export const testEventConsumer = Broker.setUpConsumer('test-event', async message => {
-  console.log(message);
-  return {
-    success: true,
-    result: {
-      world: 'world',
-    },
-  };
-});
+export const getPaymentDataConsumer = Broker.setUpConsumer('payments:start', handleGetPaymentData);
+export const createItemProductConsumer = Broker.setUpConsumer('payments:item:createProduct', handleCreateItemProduct);

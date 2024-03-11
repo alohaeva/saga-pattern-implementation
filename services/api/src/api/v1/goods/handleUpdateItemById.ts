@@ -27,4 +27,4 @@ export const handleUpdateItemById = async (req: Request, res: Response) => {
     status: httpStatusCodes.SuccessOK,
     success: true,
   });
-}
+};

@@ -1,6 +1,6 @@
 import { getPaymentDataPublisher, updateItemPublisher } from '../../broker/publishers';
 import { isNormalizedError, toNormalizedError } from '../../utils/normalError';
-import { BrokerResponse, Item } from '../../types';
+import { BrokerResponse } from '../../types';
 
 export const handleBookItem = async (data: { id: string; data: unknown }): Promise<BrokerResponse<{ url: string }>> => {
   // set item service local transaction to reserved
@@ -20,7 +20,7 @@ export const handleBookItem = async (data: { id: string; data: unknown }): Promi
     };
   }
 
-  // make payment
+  // GET CHECKOUT LINK URL
   const getPaymentUrl = await getPaymentDataPublisher({
     id: reservedItem.result.id,
   }).catch(toNormalizedError);

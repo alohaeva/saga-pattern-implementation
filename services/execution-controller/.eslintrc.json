@@ -1,26 +1,25 @@
 {
   "root": true,
   "parser": "@typescript-eslint/parser",
-  "plugins": ["prettier", "@typescript-eslint", "import"],
+  "plugins": ["@typescript-eslint", "import", "@stylistic"],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended",
-    "prettier"
+    "plugin:@typescript-eslint/recommended"
   ],
   "rules": {
-    "no-extra-boolean-cast": "off",
+    "@stylistic/semi": ["error", "always"],
+    "@stylistic/arrow-parens": ["error", "as-needed"],
+    "@stylistic/indent": ["error", 2, {
+      "offsetTernaryExpressions": true,
+      "flatTernaryExpressions": false,
+      "ImportDeclaration": 1,
+      "ObjectExpression": 1,
+      "ArrayExpression": 1
+    }],
+    "@stylistic/multiline-ternary": ["error", "always"],
     "@typescript-eslint/no-explicit-any": "warn",
-    "prettier/prettier": "error",
-    "object-curly-newline": [
-      "error",
-      {
-        "ObjectExpression": {
-          "multiline": true,
-          "minProperties": 1
-        }
-      }
-    ],
+    "no-extra-boolean-cast": "off",
     "import/order": [
       "error",
       {

@@ -1,10 +1,9 @@
 import { Request, Response } from 'express';
 import httpStatusCodes from 'status-code-enum';
+import { randNumber, randProductDescription, randProductName } from '@ngneat/falso';
 
 import { createItemPublisher } from '../../../broker/publishers';
-import { randNumber, randProductDescription, randProductName } from '@ngneat/falso';
 import { isNormalizedError, toNormalizedError } from '../../../utils/normalError';
-
 import { sendResponse } from '../../../utils/http';
 
 export const handleCreateItem = async (req: Request, res: Response) => {
@@ -37,4 +36,4 @@ export const handleCreateItem = async (req: Request, res: Response) => {
     status: httpStatusCodes.SuccessOK,
     success: true,
   });
-}
+};

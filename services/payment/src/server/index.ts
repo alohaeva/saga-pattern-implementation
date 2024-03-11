@@ -4,10 +4,14 @@ import express, { Express } from 'express';
 
 import { logger, loggerInstance } from '../logger';
 import { Broker } from '../broker';
-import { testEventConsumer } from '../broker/consumers';
+import { createItemProductConsumer, getPaymentDataConsumer } from '../broker/consumers';
 import { appConfig } from '../config/Config';
+import { diContainer } from '../containers';
+import { StripePaymentsService } from '../services';
+import { PAYMENT_SERVICE } from '../const/services';
 
 const brokerConnection = appConfig.get('connections.broker');
+const skToken = appConfig.get('common.paymentSecretToken');
 
 export class Server {
   app: Express;
@@ -27,9 +31,16 @@ export class Server {
   async start(port: number) {
     if (brokerConnection) {
       await Broker.init(brokerConnection);
+
+      await getPaymentDataConsumer();
+      await createItemProductConsumer();
     }
 
-    testEventConsumer();
+    if (skToken) {
+      const stripeInstance = new StripePaymentsService(skToken);
+
+      diContainer.register(PAYMENT_SERVICE, stripeInstance);
+    }
 
     this.server.listen(port);
   }

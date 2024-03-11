@@ -3,17 +3,17 @@ import { Expose, Transform } from 'class-transformer';
 export class ItemsDto {
   @Expose()
   @Transform(params => params.obj?._id.toString())
-  id: string;
+    id: string;
 
   @Expose()
-  title: string;
+    title: string;
 
   @Expose()
-  description: boolean;
+    description: boolean;
 
   @Expose()
-  price: number;
+    price: number;
 
   @Expose()
-  status: string;
+    status: string;
 }
